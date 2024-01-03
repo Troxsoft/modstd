@@ -1,5 +1,5 @@
 ## a c++ 11 library that makes things that should be easy easier
-# mit lisence
+#### mit lisence
 ## classes
   - MString ->
     MString is a class that contains very useful methods for managing strings. At any time it can be converted to a string.
