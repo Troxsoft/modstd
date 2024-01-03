@@ -24,11 +24,11 @@ int main()
     str.right_push(" adios");
     str.push(0, "123");
 
-    std::cout << str.to_string() << "\n";
+    std::cout << str << "\n";
     std::cout
         << "'" << str.get(str.size()) << "'"
         << "\n";
-    std::cout << str.get(0, 7).to_string() << "\n";
+    std::cout << str.get(0, 7) << "\n";
     MString other("hola como te va");
     if (other == "hola como te va")
     {
@@ -43,7 +43,7 @@ int main()
     }
     MString hola("     hola      ");
     hola.trim_space();
-    std::cout << "'" << hola.to_string() << "'"
+    std::cout << "'" << hola << "'"
               << "\n";
     MString plo("holah");
     plo.trim("h");
@@ -52,6 +52,10 @@ int main()
 
     // plo.clear();
     std::cout << plo.contains("lol") << "\n";
-    std::cout << plo.to_string() << "\n";
+    std::cout << plo << "\n";
     std::cout << plo.search("l") << "\n";
+
+    MString cadena("hola-mundo-en-python-colombia-hola-mundo-en-python-colombia-hola-mundo-en-python-colombia-hola-mundo-en-python-colombia-hola-mundo-en-python-colombia-hola-mundo-en-python-colombia-hola-mundo-en-python-colombia-hola-mundo-en-python-colombia");
+
+    std::cout << cadena.split("-") << "\n";
 }

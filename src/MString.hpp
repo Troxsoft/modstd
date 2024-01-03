@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <functional>
 #include <locale>
-
+#include "MVector.hpp"
 class MStringException : public std::exception
 {
 private:
@@ -109,6 +109,109 @@ public:
         this->str = str.str;
         this->length = this->str.length();
     }
+    std::vector<std::string> split_to_vec(std::string delimiter)
+    {
+        std::string s = this->str;
+        size_t pos_start = 0, pos_end, delim_len = delimiter.length();
+        std::string token;
+        std::vector<std::string> res;
+
+        while ((pos_end = s.find(delimiter, pos_start)) != std::string::npos)
+        {
+            token = s.substr(pos_start, pos_end - pos_start);
+            pos_start = pos_end + delim_len;
+            res.push_back(token);
+        }
+
+        res.push_back(s.substr(pos_start));
+        return res;
+    }
+    std::vector<std::string> split_to_vec(MString delimiter)
+    {
+        std::string s = this->str;
+        size_t pos_start = 0, pos_end, delim_len = delimiter.size();
+        std::string token;
+        std::vector<std::string> res;
+
+        while ((pos_end = s.find(delimiter.to_string(), pos_start)) != std::string::npos)
+        {
+            token = s.substr(pos_start, pos_end - pos_start);
+            pos_start = pos_end + delim_len;
+            res.push_back(token);
+        }
+
+        res.push_back(s.substr(pos_start));
+        return res;
+    }
+    std::vector<std::string> split_to_vec(const char delimiter[])
+    {
+        std::string s = this->str;
+        size_t pos_start = 0, pos_end, delim_len = std::string(delimiter).size();
+        std::string token;
+        std::vector<std::string> res;
+
+        while ((pos_end = s.find(delimiter, pos_start)) != std::string::npos)
+        {
+            token = s.substr(pos_start, pos_end - pos_start);
+            pos_start = pos_end + delim_len;
+            res.push_back(token);
+        }
+
+        res.push_back(s.substr(pos_start));
+        return res;
+    }
+    MVector<MString> split(const char delimiter[])
+    {
+        std::string s = this->str;
+        size_t pos_start = 0, pos_end, delim_len = std::string(delimiter).length();
+        std::string token;
+        MVector<MString> res;
+
+        while ((pos_end = s.find(delimiter, pos_start)) != std::string::npos)
+        {
+            token = s.substr(pos_start, pos_end - pos_start);
+            pos_start = pos_end + delim_len;
+            res.right_push(token);
+        }
+
+        res.right_push(s.substr(pos_start));
+        return res;
+    }
+    MVector<MString> split(std::string delimiter)
+    {
+        std::string s = this->str;
+        size_t pos_start = 0, pos_end, delim_len = delimiter.length();
+        std::string token;
+        MVector<MString> res;
+
+        while ((pos_end = s.find(delimiter, pos_start)) != std::string::npos)
+        {
+            token = s.substr(pos_start, pos_end - pos_start);
+            pos_start = pos_end + delim_len;
+            res.right_push(token);
+        }
+
+        res.right_push(s.substr(pos_start));
+        return res;
+    }
+    MVector<MString> split(MString delimiter)
+    {
+        std::string s = this->str;
+        size_t pos_start = 0, pos_end, delim_len = delimiter.size();
+        std::string token;
+        MVector<MString> res;
+
+        while ((pos_end = s.find(delimiter.to_string(), pos_start)) != std::string::npos)
+        {
+            token = s.substr(pos_start, pos_end - pos_start);
+            pos_start = pos_end + delim_len;
+            res.right_push(token);
+        }
+
+        res.right_push(s.substr(pos_start));
+        return res;
+    }
+
     void operator=(std::string str)
     {
         this->str = str;
@@ -231,6 +334,7 @@ public:
         this->str.insert(index, str);
         this->length = this->str.length();
     }
+
     void push(int index, const char str[])
     {
         this->str.insert(index, str);
@@ -302,6 +406,170 @@ public:
             ms.right_push(this->get(i));
         }
         return ms;
+    }
+    bool replace(const std::string &from, const std::string &to)
+    {
+        std::string &str = this->str;
+        size_t start_pos = str.find(from);
+        if (start_pos == std::string::npos)
+            return false;
+        str.replace(start_pos, from.length(), to);
+        this->str = str;
+        this->length = this->str.length();
+        return true;
+    }
+    bool replace(MString from, std::string to)
+    {
+        std::string &str = this->str;
+        size_t start_pos = str.find(from.to_string());
+        if (start_pos == std::string::npos)
+            return false;
+        str.replace(start_pos, from.to_string().length(), to);
+        this->str = str;
+        this->length = this->str.length();
+        return true;
+    }
+    bool replace(MString from, MString to)
+    {
+        std::string &str = this->str;
+        size_t start_pos = str.find(from.to_string());
+        if (start_pos == std::string::npos)
+            return false;
+        str.replace(start_pos, from.to_string().length(), to.to_string());
+        this->str = str;
+        this->length = this->str.length();
+        return true;
+    }
+    bool replace(std::string from, MString to)
+    {
+        std::string &str = this->str;
+        size_t start_pos = str.find(from);
+        if (start_pos == std::string::npos)
+            return false;
+        str.replace(start_pos, from.length(), to.to_string());
+        this->str = str;
+        this->length = this->str.length();
+        return true;
+    }
+    bool replace(std::string from, std::string to)
+    {
+        std::string &str = this->str;
+        size_t start_pos = str.find(from);
+        if (start_pos == std::string::npos)
+            return false;
+        str.replace(start_pos, from.length(), to);
+        this->str = str;
+        this->length = this->str.length();
+        return true;
+    }
+    bool replace(const char from[], const std::string &to)
+    {
+        std::string &str = this->str;
+        size_t start_pos = str.find(from);
+        if (start_pos == std::string::npos)
+            return false;
+        str.replace(start_pos, std::string(from).length(), to);
+        this->str = str;
+        this->length = this->str.length();
+        return true;
+    }
+
+    bool replace(const char from[], const char to[])
+    {
+        std::string &str = this->str;
+        size_t start_pos = str.find(from);
+        if (start_pos == std::string::npos)
+            return false;
+        str.replace(start_pos, std::string(from).length(), to);
+        this->str = str;
+        this->length = this->str.length();
+        return true;
+    }
+    bool replace(std::string &from, std::string &to)
+    {
+        std::string &str = this->str;
+        size_t start_pos = str.find(from);
+        if (start_pos == std::string::npos)
+            return false;
+        str.replace(start_pos, std::string(from).length(), to);
+        this->str = str;
+        this->length = this->str.length();
+        return true;
+    }
+    void replace_all(const std::string &from, const std::string &to)
+    {
+        std::string &str = this->str;
+        if (from.empty())
+            return;
+        size_t start_pos = 0;
+        while ((start_pos = str.find(from, start_pos)) != std::string::npos)
+        {
+            str.replace(start_pos, from.length(), to);
+            start_pos += to.length(); // In case 'to' contains 'from', like replacing 'x' with 'yx'
+        }
+        this->str = str;
+        this->length = this->str.length();
+    }
+    void replace_all(MString from, MString to)
+    {
+        std::string &str = this->str;
+        if (from.to_string().empty())
+            return;
+        size_t start_pos = 0;
+        while ((start_pos = str.find(from.to_string(), start_pos)) != std::string::npos)
+        {
+            str.replace(start_pos, from.to_string().length(), to.to_string());
+            start_pos += to.to_string().length(); // In case 'to' contains 'from', like replacing 'x' with 'yx'
+        }
+        this->str = str;
+        this->length = this->str.length();
+    }
+    void replace_all(std::string from, MString to)
+    {
+        std::string &str = this->str;
+        if (from.empty())
+            return;
+        size_t start_pos = 0;
+        while ((start_pos = str.find(from, start_pos)) != std::string::npos)
+        {
+            str.replace(start_pos, from.length(), to.to_string());
+            start_pos += to.to_string().length(); // In case 'to' contains 'from', like replacing 'x' with 'yx'
+        }
+        this->str = str;
+        this->length = this->str.length();
+    }
+    void replace_all(MString from, std::string &to)
+    {
+        std::string &str = this->str;
+        if (from.to_string().empty())
+            return;
+        size_t start_pos = 0;
+        while ((start_pos = str.find(from.to_string(), start_pos)) != std::string::npos)
+        {
+            str.replace(start_pos, from.to_string().length(), to);
+            start_pos += to.length(); // In case 'to' contains 'from', like replacing 'x' with 'yx'
+        }
+        this->str = str;
+        this->length = this->str.length();
+    }
+    void replace_all(std::string &from, std::string &to)
+    {
+        std::string &str = this->str;
+        if (from.empty())
+            return;
+        size_t start_pos = 0;
+        while ((start_pos = str.find(from, start_pos)) != std::string::npos)
+        {
+            str.replace(start_pos, from.length(), to);
+            start_pos += to.length(); // In case 'to' contains 'from', like replacing 'x' with 'yx'
+        }
+        this->str = str;
+        this->length = this->str.length();
+    }
+    MString set(int index, char str)
+    {
+        this->str[index] = str;
+        this->length = this->str.length();
     }
     void trim(std::string trimmer)
     {
